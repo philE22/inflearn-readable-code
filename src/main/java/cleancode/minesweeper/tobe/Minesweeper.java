@@ -54,6 +54,21 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         }
     }
 
+    private CellPosition getCellInputFromUser() {
+        outputHandler.printCommentForSelectingCell();
+
+        CellPosition cellPosition = inputHandler.getCellPositionFromUser();
+        if (gameBoard.isInvalidCellPosition(cellPosition)) {
+            throw new IllegalArgumentException("잘못된 좌표를 선택하셨습니다.");
+        }
+
+        return cellPosition;
+    }
+
+    private UserAction getUserActionInputFromUser() {
+        outputHandler.printCommentForUserAction();
+        return inputHandler.getUserActionFromUser();
+    }
 
     private void actOnCell(CellPosition cellPosition, UserAction userAction) {
         if (doesUserChoosePlantFlag(userAction)) {
@@ -69,27 +84,11 @@ public class Minesweeper implements GameInitializable, GameRunnable {
         System.out.println("잘못된 번호를 선택하셨습니다.");
     }
 
-    private boolean doesUserChooseOpenCell(UserAction userAction) {
-        return userAction == UserAction.OPEN;
-    }
-
     private boolean doesUserChoosePlantFlag(UserAction userAction) {
         return userAction == UserAction.FLAG;
     }
 
-    private CellPosition getCellInputFromUser() {
-        outputHandler.printCommentForSelectingCell();
-
-        CellPosition cellPosition = inputHandler.getCellPositionFromUser();
-        if (gameBoard.isInvalidCellPosition(cellPosition)) {
-            throw new IllegalArgumentException("잘못된 좌표를 선택하셨습니다.");
-        }
-
-        return cellPosition;
-    }
-
-    private UserAction getUserActionInputFromUser() {
-        outputHandler.printCommentForUserAction();
-        return inputHandler.getUserActionFromUser();
+    private boolean doesUserChooseOpenCell(UserAction userAction) {
+        return userAction == UserAction.OPEN;
     }
 }
