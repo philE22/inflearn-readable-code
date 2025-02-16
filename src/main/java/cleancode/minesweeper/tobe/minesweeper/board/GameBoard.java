@@ -7,6 +7,7 @@ import cleancode.minesweeper.tobe.minesweeper.board.position.RelativePosition;
 import cleancode.minesweeper.tobe.minesweeper.gamelevel.GameLevel;
 
 import java.util.List;
+import java.util.Stack;
 
 import static cleancode.minesweeper.tobe.minesweeper.board.GameStatus.*;
 
@@ -52,7 +53,8 @@ public class GameBoard {
             return;
         }
 
-        openSurroundedCells(cellPosition);
+//        openSurroundedCells(cellPosition);
+        openSurroundedCells2(cellPosition);
         checkIfGameIsOver();
     }
 
@@ -131,6 +133,35 @@ public class GameBoard {
 
         calculateSurroundedPositions(cellPosition)
                 .forEach(this::openSurroundedCells);
+    }
+
+    private void openSurroundedCells2(CellPosition cellPosition) {
+        Stack<CellPosition> stack = new Stack<>();
+        stack.push(cellPosition);
+
+        while (!stack.isEmpty()) {
+            openAndPushCellAt(stack);
+        }
+    }
+
+    private void openAndPushCellAt(Stack<CellPosition> stack) {
+        CellPosition cellPosition = stack.pop();
+
+        if (isOpenedCell(cellPosition)) {
+            return;
+        }
+        if (isLandMineCellAt(cellPosition)) {
+            return;
+        }
+
+        openOneCellAt(cellPosition);
+
+        if (doesCellHasLandMineCounts(cellPosition)) {
+            return;
+        }
+
+        calculateSurroundedPositions(cellPosition)
+                .forEach(stack::push);
     }
 
     private void openOneCellAt(CellPosition cellPosition) {
